@@ -10,7 +10,7 @@ import pyrealsense2 as rs
 
 import mediapipe as mp
 import time
-import HandTrackingModule as htm
+import PoseTrackingModule as ptm
 import glob
 import os
 
@@ -25,7 +25,7 @@ grideye_image=ge.GridValueOpenCVFormat()
 reals=RealSense()
 color_image, depth_colormap=reals.getImage()
 
-detector = htm.handDetector()
+detector = ptm.handDetector()
 detected_hands=color_image
 while True:
     grideye_image=ge.GridValueOpenCVFormat()

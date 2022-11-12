@@ -3,34 +3,34 @@ import mediapipe as mp
 import time
 
 
-class handDetector():
-    def __init__(self, mode=False, maxHands=2, detectionCon=0.5, trackCon=0.5):
+class poseDetector():
+    def __init__(self, mode=False, maxpose=2, detectionCon=0.5, trackCon=0.5):
         self.mode = mode
-        self.maxHands = maxHands
+        self.maxpose = maxpose
         self.detectionCon = detectionCon
         self.trackCon = trackCon
 
-        self.mpHands = mp.solutions.hands
-        self.hands = self.mpHands.Hands()
+        self.mpPose = mp.solutions.pose
+        self.pose = self.mpPose.pose()
         self.mpDraw = mp.solutions.drawing_utils
 
-    def findHands(self, img, draw=False):
+    def findpose(self, img, draw=False):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        self.results = self.hands.process(imgRGB)
+        self.results = self.pose.process(imgRGB)
         
-        if self.results.multi_hand_landmarks:
-            for handLms in self.results.multi_hand_landmarks:
+        if self.results.pose_landmarks:
+            for poseLmS in self.results.pose_landmarks:
                 if draw:
-                    self.mpDraw.draw_landmarks(img, handLms,
-                                               self.mpHands.HAND_CONNECTIONS)
+                    self.mpDraw.draw_landmarks(img, poseLmS,
+                                               self.mp_pose.POSE_CONNECTIONS)
         return img
 
-    def findPosition(self, img, handNo=0, draw=False):
+    def findPosition(self, img, humanNo=0, draw=False):
 
         lmList = []
-        if self.results.multi_hand_landmarks:
-            myHand = self.results.multi_hand_landmarks[handNo]
-            for id, lm in enumerate(myHand.landmark):
+        if self.results.pose_landmarks:
+            Human = self.results.pose_landmarks[humanNo]
+            for id, lm in enumerate(Human.landmark):
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
                 lmList.append([id, cx, cy])
@@ -44,10 +44,10 @@ def main():
     pTime = 0
     cTime = 0
     cap = cv2.VideoCapture(0)
-    detector = handDetector()
+    detector = poseDetector()
     while True:
         success, img = cap.read()
-        img = detector.findHands(img)
+        img = detector.findpose(img)
         lmList = detector.findPosition(img)
         if len(lmList) != 0:
             print(lmList[4])
