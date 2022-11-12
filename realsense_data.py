@@ -1,4 +1,4 @@
-import pyrealsense2.pyrealsense2 as rs
+import pyrealsense2 as rs
 import numpy as np
 import cv2
 
@@ -16,16 +16,33 @@ class RealSense():
 
         if self.device_product_line == 'L500':
             self.config.enable_stream(rs.stream.color, 960, 540, rs.format.bgr8, 30)
+            print("L500 detected")
         else:
             self.config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
         
-        self.pipeline.start(self.config)
+        self.profile=self.pipeline.start(self.config)
+
+        self.depth_sensor = self.profile.get_device().first_depth_sensor()
+        self.depth_scale = self.depth_sensor.get_depth_scale()
+        
+        self.clipping_distance_in_meters = 1 #1 meter
+        self.clipping_distance = self.clipping_distance_in_meters / self.depth_scale
+
+        # Create an align object
+        # rs.align allows us to perform alignment of depth frames to others frames
+        # The "align_to" is the stream type to which we plan to align depth frames.
+        self.align_to = rs.stream.color
+        self.align = rs.align(self.align_to)
+
 
     def getImage(self):
         # Wait for a coherent pair of frames: depth and color
         frames = self.pipeline.wait_for_frames()
-        depth_frame = frames.get_depth_frame()
-        color_frame = frames.get_color_frame()
+
+        aligned_frames = self.align.process(frames)
+
+        depth_frame = aligned_frames.get_depth_frame()
+        color_frame = aligned_frames.get_color_frame()
 
         # Convert images to numpy arrays
         depth_image = np.asanyarray(depth_frame.get_data())
