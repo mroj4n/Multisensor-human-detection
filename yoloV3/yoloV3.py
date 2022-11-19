@@ -62,9 +62,10 @@ class YOLOdetector():
                     h = int(detection[3] * self.Height)
                     x = center_x - w / 2
                     y = center_y - h / 2
-                    class_ids.append(class_id)
-                    confidences.append(float(confidence))
-                    boxes.append([x, y, w, h])
+                    if (class_id==0 or class_id==16):
+                        class_ids.append(class_id)
+                        confidences.append(float(confidence))
+                        boxes.append([x, y, w, h])
 
 
         self.indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
