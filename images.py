@@ -30,8 +30,8 @@ detected_hands=color_image
 while True:
     grideye_image=ge.GridValueOpenCVFormat()
     color_image, depth_colormap=reals.getImage()
-    detected_hands = detector.findHands(color_image, draw=True)
-    depth_Det = detector.findHands(depth_colormap, draw=True)
+    detected_hands = detector.findpose(color_image, draw=True)
+    depth_Det = detector.findpose(depth_colormap, draw=True)
     #cv2.imshow("Spark image", grideye_image)
     #cv2.imshow("Color RealSense image", color_image)
     cv2.imshow("Depth RealSense image", depth_Det)
