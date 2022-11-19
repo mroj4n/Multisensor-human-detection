@@ -16,7 +16,7 @@ import os
 
 from sensordata import GridEye
 from realsense_data import RealSense
-from yoloV3.yoloV3 import YOLOdetector
+from yoloV3 import YOLOdetector
      
 
 ge= GridEye()

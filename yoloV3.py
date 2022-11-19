@@ -3,8 +3,8 @@ import numpy as np
 
 class YOLOdetector():
     def __init__(self):
-        self.config='yolov3.cfg'
-        self.weights='yolov3.weights'
+        self.config='yolov3/yolov3.cfg'
+        self.weights='yolov3/yolov3.weights'
         self.classes = [['person'], ['bicycle'], ['car'], ['motorcycle'], ['airplane'], ['bus'], ['train'], ['truck'], ['boat'], ['traffic light'], ['fire hydrant'], ['stop sign'], [
             'parking meter'], ['bench'], ['bird'], ['cat'], ['dog'], ['horse'], ['sheep'], ['cow'], ['elephant'], ['bear'], ['zebra'], ['giraffe'], ['backpack'], ['umbrella'], [
             'handbag'], ['tie'], ['suitcase'], ['frisbee'], ['skis'], ['snowboard'], ['sports ball'], ['kite'], ['baseball bat'], ['baseball glove'], ['skateboard'], [
@@ -37,7 +37,7 @@ class YOLOdetector():
 
         cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    def predict(self,image=cv2.imread('dog.jpg')):
+    def predict(self,image=cv2.imread('yolov3/dog.jpg')):
         self.image=image
         self.Width = self.image.shape[1]
         self.Height = self.image.shape[0]
