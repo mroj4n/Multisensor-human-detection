@@ -37,7 +37,14 @@ class poseDetector():
                     cv2.circle(img, (cx, cy), 15, (255, 0, 255), cv2.FILLED)
 
         return lmList
-
+    def findPoseAndDrawLandmarks(self,color_img,depth_img):
+        color_img=self.findpose(color_img)
+        depth_img = cv2.cvtColor(depth_img, cv2.COLOR_BGR2RGB)
+        depth_img.flags.writeable = True
+        if self.results.pose_landmarks:
+            self.mpDraw.draw_landmarks(depth_img, self.results.pose_landmarks,
+                                       self.mpPose.POSE_CONNECTIONS)
+        return color_img,depth_img        
 
 def main():
     pTime = 0

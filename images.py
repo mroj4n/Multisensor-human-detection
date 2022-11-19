@@ -26,18 +26,18 @@ reals=RealSense()
 color_image, depth_colormap=reals.getImage()
 
 detector = ptm.poseDetector()
-detected_hands=color_image
-
-yolo= YOLOdetector()
+detectPose=color_image
+detectPoseDepth=depth_colormap
+# yolo= YOLOdetector()
 while True:
     grideye_image=ge.GridValueOpenCVFormat()
     color_image, depth_colormap=reals.getImage()
-    detected_hands = detector.findpose(color_image, draw=True)
-    yoloDetect = yolo.predict(color_image)
+    detectPoseRGB , detectPoseDepth  = detector.findpose(color_image, depth_colormap)
+    # yoloDetect = yolo.predict(color_image)
     cv2.imshow("Spark image", grideye_image)
     cv2.imshow("Color RealSense image", color_image)
-    cv2.imshow("Depth RealSense image", depth_colormap)
-    cv2.imshow("Dete RealSense image", yoloDetect)
+    cv2.imshow("Depth RealSense image", detectPoseDepth)
+    cv2.imshow("Dete RealSense image", detectPoseRGB)
     k=cv2.waitKey(1)
     if k==27:
         cv2.destroyAllWindows()
