@@ -25,7 +25,7 @@ grideye_image=ge.GridValueOpenCVFormat()
 reals=RealSense()
 color_image, depth_colormap=reals.getImage()
 
-detector = ptm.handDetector()
+detector = ptm.poseDetector()
 detected_hands=color_image
 while True:
     grideye_image=ge.GridValueOpenCVFormat()
