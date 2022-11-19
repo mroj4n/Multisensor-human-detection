@@ -21,7 +21,7 @@ class poseDetector():
         if self.results.pose_landmarks:
             if draw:
                 self.mpDraw.draw_landmarks(img, self.results.pose_landmarks,
-                                           self.mp_pose.POSE_CONNECTIONS)
+                                           self.mpPose.POSE_CONNECTIONS)
         return img
 
     def findPosition(self, img, humanNo=0, draw=False):
