@@ -17,12 +17,11 @@ class poseDetector():
     def findpose(self, img, draw=False):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.pose.process(imgRGB)
-        
+        imgRGB.flags.writeable = True
         if self.results.pose_landmarks:
-            for poseLmS in self.results.pose_landmarks:
-                if draw:
-                    self.mpDraw.draw_landmarks(img, poseLmS,
-                                               self.mp_pose.POSE_CONNECTIONS)
+            if draw:
+                self.mpDraw.draw_landmarks(img, self.results.pose_landmarks,
+                                           self.mp_pose.POSE_CONNECTIONS)
         return img
 
     def findPosition(self, img, humanNo=0, draw=False):
