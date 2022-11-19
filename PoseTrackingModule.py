@@ -10,8 +10,8 @@ class poseDetector():
         self.detectionCon = detectionCon
         self.trackCon = trackCon
 
-        self.mpPose = mp.solutions.pose
-        self.pose = self.mpPose.pose()
+        self.tmpPose = mp.solutions.pose
+        self.pose = mp.solutions.pose
         self.mpDraw = mp.solutions.drawing_utils
 
     def findpose(self, img, draw=False):
