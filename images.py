@@ -32,7 +32,7 @@ detectPoseDepth=depth_colormap
 while True:
     grideye_image=ge.GridValueOpenCVFormat()
     color_image, depth_colormap=reals.getImage()
-    detectPoseRGB , detectPoseDepth  = detector.findpose(color_image, depth_colormap)
+    detectPoseRGB , detectPoseDepth  = detector.findPoseAndDrawLandmarks(color_image, depth_colormap)
     # yoloDetect = yolo.predict(color_image)
     cv2.imshow("Spark image", grideye_image)
     cv2.imshow("Color RealSense image", color_image)
