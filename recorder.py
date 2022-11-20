@@ -44,7 +44,7 @@ while True:
     cv2.imwrite(Spark_filename+str(counter)+file_ext, grideye_image)
     cv2.imwrite(Color_filename+str(counter)+file_ext, color_image)
     cv2.imwrite(Depth_filename+str(counter)+file_ext, depth_colormap)
-
+    cv2.imshow("RealSense image", color_image)
     counter=counter+1
     k = cv2.waitKey(1)
     if k == 27:
