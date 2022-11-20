@@ -28,6 +28,7 @@ color_image, depth_colormap = reals.getImage()
 Spark_filename= "images/Spark_image/"
 Color_filename= "images/Color_RealSense/"
 Depth_filename= "images/Depth_RealSense/"
+file_ext = ".jpg"
 counter=0
 
 shutil.rmtree("images")
@@ -40,9 +41,9 @@ while True:
     grideye_image = ge.GridValueOpenCVFormat()
     color_image, depth_colormap = reals.getImage()
 
-    cv2.imwrite(Spark_filename+str(counter), grideye_image)
-    cv2.imwrite(Color_filename+str(counter), color_image)
-    cv2.imwrite(Depth_filename+str(counter), depth_colormap)
+    cv2.imwrite(Spark_filename+str(counter)+file_ext, grideye_image)
+    cv2.imwrite(Color_filename+str(counter)+file_ext, color_image)
+    cv2.imwrite(Depth_filename+str(counter)+file_ext, depth_colormap)
 
     counter=counter+1
     k = cv2.waitKey(1)
