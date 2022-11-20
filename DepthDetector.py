@@ -7,7 +7,7 @@ class DepthDetector():
         pass
     
     def _normalized_to_pixel_coordinates(
-        normalized_x: float, normalized_y: float, image_width: int,
+        self,normalized_x: float, normalized_y: float, image_width: int,
         image_height: int) -> Union[None, Tuple[int, int]]:
       """Converts normalized value pair to pixel coordinates."""
 
