@@ -36,7 +36,6 @@ while True:
     color_image, depth_colormap = reals.getImage()
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_colormap)
-    detectPoseDepth=depthDetector.detect(landmarks,detectPoseDepth)
     # yoloDetect = yolo.predict(color_image)
     #cv2.imshow("Spark image", grideye_image)
     #cv2.imshow("Color RealSense image", color_image)
