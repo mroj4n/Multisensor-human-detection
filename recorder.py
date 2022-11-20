@@ -25,17 +25,19 @@ grideye_image = ge.GridValueOpenCVFormat()
 reals = RealSense()
 color_image, depth_colormap = reals.getImage()
 
-Spark_filename= "images/Spark_image/"
-Color_filename= "images/Color_RealSense/"
-Depth_filename= "images/Depth_RealSense/"
+main_folder_name="images/"
+Spark_filename= main_folder_name+"Spark_image/"
+Color_filename= main_folder_name+"Color_RealSense/"
+Depth_filename= main_folder_name+"Depth_RealSense/"
 file_ext = ".jpg"
 counter=0
 
-shutil.rmtree("images")
-os.mkdir("images")
-os.mkdir("images/Spark_image/")
-os.mkdir("images/Color_RealSense/")
-os.mkdir("images/Depth_RealSense/")
+if os.path.exists(main_folder_name):
+    shutil.rmtree(main_folder_name)
+os.mkdir(main_folder_name)
+os.mkdir(Spark_filename)
+os.mkdir(Color_filename)
+os.mkdir(Depth_filename)
 
 while True:
     grideye_image = ge.GridValueOpenCVFormat()

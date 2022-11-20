@@ -4,8 +4,8 @@ import numpy as np
 
 class YOLOdetector():
     def __init__(self):
-        self.config = 'yoloV3/yolov4-tiny.cfg'
-        self.weights = 'yoloV3/yolov4-tiny.weights'
+        self.config = 'yoloV3/yolov3.cfg'
+        self.weights = 'yoloV3/yolov3.weights'
         self.classes = [['person'], ['bicycle'], ['car'], ['motorcycle'], ['airplane'], ['bus'], ['train'], ['truck'], ['boat'], ['traffic light'], ['fire hydrant'], ['stop sign'], [
             'parking meter'], ['bench'], ['bird'], ['cat'], ['dog'], ['horse'], ['sheep'], ['cow'], ['elephant'], ['bear'], ['zebra'], ['giraffe'], ['backpack'], ['umbrella'], [
             'handbag'], ['tie'], ['suitcase'], ['frisbee'], ['skis'], ['snowboard'], ['sports ball'], ['kite'], ['baseball bat'], ['baseball glove'], ['skateboard'], [

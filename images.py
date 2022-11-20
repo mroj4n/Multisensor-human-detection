@@ -1,48 +1,48 @@
-try:
-    import smbus2 as smbus
-except (ImportError):
-    import smbus
 import numpy as np
 import cv2
 from time import sleep
 from pprint import pprint
-import pyrealsense2 as rs
+
 
 import mediapipe as mp
-import time
+
 import PoseTrackingModule as ptm
 import glob
 import os
 
-from sensordata import GridEye
-from realsense_data import RealSense
 from yoloV3 import YOLOdetector
 
 from DepthDetector import DepthDetector
 
-ge = GridEye()
-grideye_image = ge.GridValueOpenCVFormat()
+main_folder_name="images/"
+Spark_filename= main_folder_name+"Spark_image/"
+Color_filename= main_folder_name+"Color_RealSense/"
+Depth_filename= main_folder_name+"Depth_RealSense/"
+file_ext = ".jpg"
+counter=0
 
-reals = RealSense()
-color_image, depth_colormap = reals.getImage()
+images=[]
+for _ in os.listdir(Spark_filename):
+    images.append([Spark_filename+str(counter)+file_ext,Color_filename+str(counter)+file_ext,Depth_filename+str(counter)+file_ext])
+    counter=counter+1
+
 
 detector = ptm.poseDetector()
-detectPose = color_image
-detectPoseDepth = depth_colormap
 depthDetector=DepthDetector()
-# yolo= YOLOdetector()
-while True:
-    grideye_image = ge.GridValueOpenCVFormat()
-    color_image, depth_colormap = reals.getImage()
+yolo= YOLOdetector()
+print (images[1])
+for i in range(50, 130):
+    grideye_image = cv2.imread(images[i][0])
+    color_image  = cv2.imread(images[i][1])
+    depth_colormap = cv2.imread(images[i][2])
+    # yoloDetect = yolo.predict(color_image)
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_colormap)
-    # yoloDetect = yolo.predict(color_image)
-    #cv2.imshow("Spark image", grideye_image)
-    #cv2.imshow("Color RealSense image", color_image)
+    cv2.imshow("Spark image", grideye_image)
+    cv2.imshow("Color RealSense image", color_image)
     cv2.imshow("Depth RealSense image", detectPoseDepth)
-
-    #cv2.imshow("Dete RealSense image", detectPoseRGB)
-    k = cv2.waitKey(1)
+    cv2.imshow("Dete RealSense image", detectPoseRGB)
+    k = cv2.waitKey(0)
     if k == 27:
         cv2.destroyAllWindows()
         break
