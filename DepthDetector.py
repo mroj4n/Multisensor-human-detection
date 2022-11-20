@@ -26,12 +26,12 @@ class DepthDetector():
     
     def detect(self,landmarks,depth_img):
         image_rows, image_cols, _ = depth_img.shape
-        pixLandmarks=[[]]
+        pixLandmarks=[]
         if landmarks:
             for landmark in landmarks:
                 x_px,y_px = self._normalized_to_pixel_coordinates(landmark[0],landmark[1],image_cols, image_rows)
                 pixLandmarks.append([x_px,y_px])
             for landmark in pixLandmarks:
-                cv2.circle(depth_img, (landmark[1],landmark[0]), 5, 250, 2)
+                cv2.circle(depth_img, (landmark[0],landmark[1]), 5, 250, 2)
         return depth_img
     

@@ -38,6 +38,7 @@ for i in range(50, 130):
     # yoloDetect = yolo.predict(color_image)
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_colormap)
+    color_image=depthDetector.detect(landmarks,color_image)
     cv2.imshow("Spark image", grideye_image)
     cv2.imshow("Color RealSense image", color_image)
     cv2.imshow("Depth RealSense image", detectPoseDepth)

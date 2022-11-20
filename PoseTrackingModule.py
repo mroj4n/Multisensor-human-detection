@@ -53,9 +53,6 @@ class poseDetector():
         if self.results.pose_landmarks:
             for data_point in self.results.pose_landmarks.landmark:
                 landmarks.append([data_point.x,data_point.y,data_point.visibility])
-            for landmark in landmarks:
-                landmark[0] = landmark[0] *  depth_img.shape[1]
-                landmark[1] = landmark[1] *  depth_img.shape[0]
         return color_img, depth_img, landmarks
 
 
