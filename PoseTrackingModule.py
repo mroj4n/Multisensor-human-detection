@@ -24,11 +24,11 @@ class poseDetector():
                                            self.mpPose.POSE_CONNECTIONS)
         return img
 
-    def findPosition(self, img, humanNo=0, draw=False):
+    def findPosition(self, img, draw=False):
 
         lmList = []
         if self.results.pose_landmarks:
-            Human = self.results.pose_landmarks[humanNo]
+            Human = self.results.pose_landmarks
             for id, lm in enumerate(Human.landmark):
                 h, w, c = img.shape
                 cx, cy = int(lm.x * w), int(lm.y * h)
@@ -38,17 +38,17 @@ class poseDetector():
 
         return lmList
 
-    def findPoseColorAndDepth(self, color_img, depth_img):
+    def findPoseColorAndDepth(self, color_img, depth_img, draw=False):
         color_img = self.findpose(color_img, True)
-        depth_img = cv2.cvtColor(depth_img, cv2.COLOR_BGR2RGB)
         depth_img.flags.writeable = True
         if self.results.pose_landmarks:
-            self.mpDraw.draw_landmarks(depth_img, self.results.pose_landmarks,
-                                       self.mpPose.POSE_CONNECTIONS)
+            if draw:
+                self.mpDraw.draw_landmarks(depth_img, self.results.pose_landmarks,
+                                           self.mpPose.POSE_CONNECTIONS)
         return color_img, depth_img
 
     def findPoseAndDrawLandmarks(self, color_img, depth_img):
-        self.findPoseColorAndDepth(color_img, depth_img)
+        color_img, depth_img=self.findPoseColorAndDepth(color_img, depth_img)
         landmarks=[]
         if self.results.pose_landmarks:
             for data_point in self.results.pose_landmarks.landmark:

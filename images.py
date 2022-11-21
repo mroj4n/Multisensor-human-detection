@@ -30,20 +30,22 @@ for _ in os.listdir(Spark_filename):
 detector = ptm.poseDetector()
 depthDetector=DepthDetector()
 yolo= YOLOdetector()
-print (images[1])
-for i in range(50, 130):
+for i in range(0, 144):
     grideye_image = cv2.imread(images[i][0])
     color_image  = cv2.imread(images[i][1])
     depth_colormap = cv2.imread(images[i][2])
     # yoloDetect = yolo.predict(color_image)
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_colormap)
-    color_image=depthDetector.detect(landmarks,color_image)
-    cv2.imshow("Spark image", grideye_image)
+    if (landmarks):
+        color_image=depthDetector.detect(landmarks,depth_colormap)
+    #cv2.imshow("Spark image", grideye_image)
+    
     cv2.imshow("Color RealSense image", color_image)
-    cv2.imshow("Depth RealSense image", detectPoseDepth)
-    cv2.imshow("Dete RealSense image", detectPoseRGB)
-    k = cv2.waitKey(0)
+    
+    #cv2.imshow("Depth RealSense image", detectPoseDepth)
+    #cv2.imshow("Dete RealSense image", detectPoseRGB)
+    k = cv2.waitKey(1)
     if k == 27:
         cv2.destroyAllWindows()
         break
