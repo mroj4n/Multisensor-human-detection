@@ -24,22 +24,22 @@ ge = GridEye()
 grideye_image = ge.GridValueOpenCVFormat()
 
 reals = RealSense()
-color_image, depth_colormap = reals.getImage()
+color_image, depth_colormap, depth_frame = reals.getImage()
 
 detector = ptm.poseDetector()
 depthDetector=DepthDetector()
 # yolo= YOLOdetector()
 while True:
+    color_image, depth_colormap, depth_frame = reals.getImage()
     grideye_image = ge.GridValueOpenCVFormat()
-    color_image, depth_colormap = reals.getImage()
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_colormap)
     # yoloDetect = yolo.predict(color_image)
-    cv2.imshow("Spark image", grideye_image)
+    #cv2.imshow("Spark image", grideye_image)
     cv2.imshow("Color RealSense image", color_image)
     cv2.imshow("Depth RealSense image", detectPoseDepth)
 
-    #cv2.imshow("Dete RealSense image", detectPoseRGB)
+    cv2.imshow("depth_frame", depth_frame)
     k = cv2.waitKey(1)
     if k == 27:
         cv2.destroyAllWindows()

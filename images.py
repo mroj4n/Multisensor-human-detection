@@ -38,14 +38,14 @@ for i in range(0, 144):
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_colormap)
     if (landmarks):
-        color_image=depthDetector.detect(landmarks,depth_colormap)
-    #cv2.imshow("Spark image", grideye_image)
+        depth_colormap=depthDetector.detect(landmarks,depth_colormap)
+    cv2.imshow("Spark image", grideye_image)
     
-    cv2.imshow("Color RealSense image", color_image)
+    cv2.imshow("Color RealSense image", depth_colormap)
     
     #cv2.imshow("Depth RealSense image", detectPoseDepth)
     #cv2.imshow("Dete RealSense image", detectPoseRGB)
-    k = cv2.waitKey(1)
+    k = cv2.waitKey(0)
     if k == 27:
         cv2.destroyAllWindows()
         break

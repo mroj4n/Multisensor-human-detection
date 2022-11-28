@@ -37,6 +37,7 @@ class DepthDetector():
         return pixLandmarks
    
     def doesChestHaveDepth(self,pixLandmarks,depth_img):
+        #use ransac to approximate a plane
         depthsInChest=[]
         for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
             for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
@@ -80,7 +81,7 @@ class DepthDetector():
             if(self.faceDepth(pixLandmarks,depth_img)):
                 DepthConfidence=DepthConfidence+1
         print(DepthConfidence)
-        # for landmark in pixLandmarks:
-        #     cv2.circle(depth_img, (landmark[0],landmark[1]), 5, 250, 2)
+        for landmark in pixLandmarks:
+            cv2.circle(depth_img, (landmark[0],landmark[1]), 5, 250, 2)
         return depth_img
     
