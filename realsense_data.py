@@ -34,13 +34,14 @@ class RealSense():
         self.align_to = rs.stream.color
         self.align = rs.align(self.align_to)
 
+    def getDepthScale(self):
+        depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
+        return depth_scale
 
     def getImage(self):
-        # Wait for a coherent pair of frames: depth and color
-        for x in range(5):
-            self.pipeline.wait_for_frames()
         frames = self.pipeline.wait_for_frames()
 
+        # alighn frames
         aligned_frames = self.align.process(frames)
 
         depth_frame = aligned_frames.get_depth_frame()
@@ -51,7 +52,4 @@ class RealSense():
         depth_image = np.asanyarray(colorizer.colorize(depth_frame).get_data())
         color_image = np.asanyarray(color_frame.get_data())
 
-        depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
-        
-
-        return color_image, depth_image,depth_scale
+        return color_image, depth_image
