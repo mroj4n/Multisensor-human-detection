@@ -47,16 +47,11 @@ class RealSense():
         color_frame = aligned_frames.get_color_frame()
 
         # Convert images to numpy arrays
-        depth_image = np.asanyarray(depth_frame.get_data())
+        colorizer = rs.colorizer()
+        depth_image = np.asanyarray(colorizer.colorize(depth_frame).get_data())
         color_image = np.asanyarray(color_frame.get_data())
-
-        # Apply colormap on depth image (image must be converted to 8-bit per pixel first)
-        depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
 
         depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
         
-        depth_frame = depth_frame.astype(float)
 
-        depth_frame=depth_frame*depth_scale
-
-        return color_image, depth_colormap,depth_frame
+        return color_image, depth_image,depth_scale
