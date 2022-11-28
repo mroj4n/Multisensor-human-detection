@@ -54,6 +54,8 @@ class RealSense():
         depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_image, alpha=0.03), cv2.COLORMAP_JET)
 
         depth_scale = self.profile.get_device().first_depth_sensor().get_depth_scale()
+        
+        depth_frame = depth_frame.astype(float)
 
         depth_frame=depth_frame*depth_scale
 
