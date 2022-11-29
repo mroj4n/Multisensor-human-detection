@@ -24,21 +24,27 @@ ge = GridEye()
 grideye_image = ge.GridValueOpenCVFormat()
 
 reals = RealSense()
-color_image, depth_colormap = reals.getImage()
+color_image, depth_map = reals.getImage()
 depth_scale=reals.getDepthScale()
 
 detector = ptm.poseDetector()
 depthDetector=DepthDetector()
 # yolo= YOLOdetector()
 while True:
-    color_image, depth_colormap = reals.getImage()
+    color_image, depth_map = reals.getImage()
     grideye_image = ge.GridValueOpenCVFormat()
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
-        color_image, depth_colormap)
+        color_image, depth_map)
     # yoloDetect = yolo.predict(color_image)
     #cv2.imshow("Spark image", grideye_image)
+
+    distanceCM=depth_map[205,305].astype(float)*depth_scale*100
+    cv2.circle(color_image,(305,205),4,(0,0,0))
+    cv2.putText(color_image,"{}cm".format(distanceCM),(305,195),cv2.FONT_HERSHEY_PLAIN,1,(0,0,0),2)
+    
     cv2.imshow("Color RealSense image", color_image)
-    cv2.imshow("Depth RealSense image", detectPoseDepth)
+    
+    
 
     k = cv2.waitKey(1)
     if k == 27:

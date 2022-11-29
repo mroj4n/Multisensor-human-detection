@@ -48,8 +48,9 @@ class RealSense():
         color_frame = aligned_frames.get_color_frame()
 
         # Convert images to numpy arrays
-        colorizer = rs.colorizer()
-        depth_image = np.asanyarray(colorizer.colorize(depth_frame).get_data())
+        #colorizer = rs.colorizer() #NO COLORIZE
+        #depth_image = np.asanyarray(colorizer.colorize(depth_frame).get_data())
+        depth_image = np.asanyarray(depth_frame.get_data())
         color_image = np.asanyarray(color_frame.get_data())
 
         return color_image, depth_image
