@@ -76,8 +76,26 @@ class DepthDetector():
         ## print (flat_factor)
         return flat_factor > 1e-2
 
+    def ThermalDetection(self,pixLandmarks,depth_img,thermalVals,minTemp,maxTemp):
+        TempOfStomach=0
+        iters=0
+        thermalconfidence=0
+        for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
+            for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
+                if (int(depth_img[i][j])!=0):
+                    TempOfStomach=TempOfStomach+thermalVals[int(i/80)][int(j/60)]
+                    iters=iters+1
+        if(iters>0):
+            TempOfStomach=TempOfStomach/iters
+            if (TempOfStomach>29 and TempOfStomach < 38):
+                thermalconfidence=thermalconfidence+1
+            if ((TempOfStomach/maxTemp)*100 >10 or (TempOfStomach/minTemp)*100>110 ):
+                thermalconfidence=thermalconfidence+5
+        return thermalconfidence
 
-    def detect(self,landmarks,depth_img):
+
+
+    def detect(self,landmarks,depth_img,thermalVals,minTemp,maxTemp):
         pixLandmarks=self.getPixelLandmarks(landmarks,depth_img)
 
         DepthConfidence=0
@@ -89,7 +107,9 @@ class DepthDetector():
         #if(faceDetected):
             if(self.faceDepth(pixLandmarks,depth_img)):
                 DepthConfidence=DepthConfidence+3
-        print(DepthConfidence)
+
+            print("ThermalConfidence",  self.ThermalDetection(pixLandmarks,depth_img,thermalVals,minTemp,maxTemp))
+            print("DepthConfidence",DepthConfidence)
         for landmark in pixLandmarks:
             cv2.circle(depth_img, (landmark[0],landmark[1]), 5, 250, 2)
         return depth_img

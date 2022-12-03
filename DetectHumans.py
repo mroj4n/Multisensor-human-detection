@@ -32,17 +32,18 @@ depthDetector=DepthDetector(depth_scale=depth_scale)
 while True:
     color_image, depth_map = reals.getImage()
     grideye_image = ge.GetGridValue()
+    grideye_values,minTemp,maxTemp=ge.GetGridValue(ImageMode=False)
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_map)
     if(landmarks):
-        depth_map=depthDetector.detect(landmarks,depth_map)
+        depth_map=depthDetector.detect(landmarks,depth_map,grideye_values,minTemp,maxTemp)
     # yoloDetect = yolo.predict(color_image)
     #cv2.imshow("Spark image", grideye_image)
 
     distanceCM=depth_map[205,305].astype(float)*depth_scale*100
     cv2.circle(color_image,(305,205),4,(0,0,0))
     cv2.putText(color_image,"{}cm".format(distanceCM),(305,195),cv2.FONT_HERSHEY_PLAIN,1,(0,0,0),2)
-    for g in ge.GetGridValue(ImageMode=False):
+    for g in ge.GetGridValue(ImageMode=False)[0]:
         print(g)
     print("##########################")
     cv2.imshow("Color RealSense image", color_image)
