@@ -21,8 +21,8 @@ from yoloV3 import YOLOdetector
 from DepthDetector import DepthDetector
 
 ge = GridEye()
-grideye_image = ge.GridValueOpenCVFormat()
-
+grideye_image = ge.GetGridValue()
+print(ge.GetGridValue(ImageMode=False))
 reals = RealSense()
 color_image, depth_map = reals.getImage()
 depth_scale=reals.getDepthScale()
@@ -32,7 +32,7 @@ depthDetector=DepthDetector(depth_scale=depth_scale)
 # yolo= YOLOdetector()
 while True:
     color_image, depth_map = reals.getImage()
-    grideye_image = ge.GridValueOpenCVFormat()
+    grideye_image = ge.GetGridValue()
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_map)
     if(landmarks):

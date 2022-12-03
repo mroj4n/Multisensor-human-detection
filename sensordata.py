@@ -201,12 +201,15 @@ class GridEye():
                         value = (int(lines[i][j]))                 
                     img[i, j] = value
             return img, minv, maxv
-    def GridValueOpenCVFormat(self):
+    def GetGridValue(self,ImageMode=True):
         grideye_image = self.get_sensor_data("GRAYIMAGE")[0]
         grideye_resized_img=cv2.resize(grideye_image,(480,640),interpolation = cv2.INTER_AREA)
         grideye_resized_img=cv2.convertScaleAbs(grideye_resized_img)
         grideye_resized_img=cv2.rotate(grideye_resized_img,cv2.ROTATE_90_COUNTERCLOCKWISE)
-        return grideye_resized_img
+        if(ImageMode):
+            return grideye_resized_img
+        grideye_temps,minv,maxv = self.get_sensor_data("TEMP")
+        return [grideye_temps,minv,maxv]
 
 
 def int2twoscomplement(value, bits=12):

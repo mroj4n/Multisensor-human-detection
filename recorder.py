@@ -20,7 +20,7 @@ from realsense_data import RealSense
 
 
 ge = GridEye()
-grideye_image = ge.GridValueOpenCVFormat()
+grideye_image = ge.GetGridValue()
 
 reals = RealSense()
 color_image, depth_colormap = reals.getImage()
@@ -40,7 +40,7 @@ os.mkdir(Color_filename)
 os.mkdir(Depth_filename)
 
 while True:
-    grideye_image = ge.GridValueOpenCVFormat()
+    grideye_image = ge.GetGridValue()
     color_image, depth_colormap = reals.getImage()
 
     cv2.imwrite(Spark_filename+str(counter)+file_ext, grideye_image)

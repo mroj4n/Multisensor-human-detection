@@ -35,7 +35,7 @@ class DepthDetector():
                     x_px,y_px,isLandmarkVisible = self._normalized_to_pixel_coordinates(landmark[0],landmark[1],image_cols, image_rows)
                 pixLandmarks.append([x_px,y_px,isLandmarkVisible])
         return pixLandmarks
-   
+    
     def doesChestHaveDepth(self,pixLandmarks,depth_img):
         depthsInChestList=[]
         for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
@@ -45,25 +45,29 @@ class DepthDetector():
         depthsInChest=np.array(depthsInChestList)
         avg= np.mean(depthsInChest)
         flat_factor = abs(np.sum((depthsInChest-avg)*abs(depthsInChest-avg))/len(depthsInChest))
+        ##Should be tested with a flaat
+        ## print("chest")
+        ## print (flat_factor)
         return flat_factor > 1e-4
     
-    def faceDepth(self,landmarks,depth_img):
-        depths=[]
-        anti=0
-
-        for i in range(0,10):
-            if (landmarks[i][2]):
-                depths.append(int(depth_img[landmarks[i][0]][landmarks[i][1]]))
-                anti=anti+1
-        if (np.std(depths)<10):
-            return False
-        return True
+    def faceDepth(self,pixLandmarks,depth_img):
+        depthsF=[]
+        for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
+            for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
+                if (int(depth_img[i][j])!=0):
+                    depthsF.append(depth_img[i][j].astype(float)*self.depth_scale*1000)#distance in cm
+        depths=np.array(depthsF)
+        avg= np.mean(depths)
+        flat_factor = abs(np.sum((depths-avg)*abs(depths-avg))/len(depths))
+        ##Should be tested with a flaat
+        ## print("FACE")
+        ## print (flat_factor)
+        return flat_factor > 1e-2
 
 
 
 
     def detect(self,landmarks,depth_img):
-        image_rows, image_cols = depth_img.shape
         pixLandmarks=self.getPixelLandmarks(landmarks,depth_img)
 
         DepthConfidence=0
@@ -71,16 +75,10 @@ class DepthDetector():
         if (pixLandmarks[24][2] and pixLandmarks[23][2] and pixLandmarks[12][2] and pixLandmarks[11][2]):
             #checks if all 4 points for chest is existing
             if(self.doesChestHaveDepth(pixLandmarks,depth_img)):
-                DepthConfidence=DepthConfidence+1
-        
-        
-        faceDetected = True
-        for i in range(0,10):
-            if (not landmarks[i][2]):
-                faceDetected=False
+                DepthConfidence=DepthConfidence+10
         #if(faceDetected):
-         #   if(self.faceDepth(pixLandmarks,depth_img)):
-          #      DepthConfidence=DepthConfidence+1
+            if(self.faceDepth(pixLandmarks,depth_img)):
+                DepthConfidence=DepthConfidence+3
         print(DepthConfidence)
         for landmark in pixLandmarks:
             cv2.circle(depth_img, (landmark[0],landmark[1]), 5, 250, 2)
