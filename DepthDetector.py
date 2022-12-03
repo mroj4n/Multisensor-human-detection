@@ -94,7 +94,7 @@ class DepthDetector():
             TempOfStomach=TempOfStomach/iters
             if (TempOfStomach>29 and TempOfStomach < 38):
                 thermalconfidence=thermalconfidence+1
-            if ((TempOfStomach/maxTemp)*100 >10 or (TempOfStomach/minTemp)*100>110 ):
+            if (((TempOfStomach/maxTemp)*100 >10) or ((TempOfStomach/minTemp)*100>110) ):
                 thermalconfidence=thermalconfidence+5
         return thermalconfidence
 
