@@ -209,7 +209,9 @@ class GridEye():
         if(ImageMode):
             return grideye_resized_img
         grideye_temps,_,_ = self.get_sensor_data("TEMP")
-        return grideye_temps
+        grideyeTemps = np.array(grideye_temps)
+        grideyeTemps = np.rot90(grideyeTemps)
+        return grideyeTemps
 
 
 def int2twoscomplement(value, bits=12):

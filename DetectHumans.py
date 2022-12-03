@@ -22,7 +22,6 @@ from DepthDetector import DepthDetector
 
 ge = GridEye()
 grideye_image = ge.GetGridValue()
-print(ge.GetGridValue(ImageMode=False))
 reals = RealSense()
 color_image, depth_map = reals.getImage()
 depth_scale=reals.getDepthScale()

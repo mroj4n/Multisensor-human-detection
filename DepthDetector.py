@@ -38,9 +38,10 @@ class DepthDetector():
     
     def doesChestHaveDepth(self,pixLandmarks,depth_img):
         depthsInChestList=[]
+        image_rows, image_cols = depth_img.shape
         for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
             for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
-                if(cv2.pointPolygonTest(depth_img, (i,j), False) != 1.0):
+                if (i>image_rows or i <0 or j>image_cols or j<0 ):
                     return False
 
         for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
@@ -57,9 +58,10 @@ class DepthDetector():
     
     def faceDepth(self,pixLandmarks,depth_img):
         depthsF=[]
+        image_rows, image_cols = depth_img.shape
         for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
             for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
-                if (cv2.pointPolygonTest(depth_img, (i,j), False) != 1.0):
+                if (i>image_rows or i <0 or j>image_cols or j<0 ):
                     return False
 
         for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
