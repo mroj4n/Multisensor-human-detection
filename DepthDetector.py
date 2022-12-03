@@ -27,7 +27,7 @@ class DepthDetector():
       return x_px, y_px , True
     
     def getPixelLandmarks(self,landmarks,depth_img):
-        image_rows, image_cols, _ = depth_img.shape
+        image_rows, image_cols = depth_img.shape
         pixLandmarks=[]
         if landmarks:
             for landmark in landmarks:
@@ -45,7 +45,7 @@ class DepthDetector():
         depthsInChest=np.array(depthsInChestList)
         avg= np.mean(depthsInChest)
         flat_factor = abs(np.sum((depthsInChest-avg)*abs(depthsInChest-avg))/len(depthsInChest))
-        return flat_factor > 1e-5
+        return flat_factor > 1e-4
     
     def faceDepth(self,landmarks,depth_img):
         depths=[]
@@ -53,7 +53,7 @@ class DepthDetector():
 
         for i in range(0,10):
             if (landmarks[i][2]):
-                depths.append(int(depth_img[landmarks[i][0]][landmarks[i][1]][0])+int(depth_img[landmarks[i][0]][landmarks[i][1]][1])+int(depth_img[landmarks[i][0]][landmarks[i][1]][2]))
+                depths.append(int(depth_img[landmarks[i][0]][landmarks[i][1]]))
                 anti=anti+1
         if (np.std(depths)<10):
             return False
@@ -63,7 +63,7 @@ class DepthDetector():
 
 
     def detect(self,landmarks,depth_img):
-        image_rows, image_cols, _ = depth_img.shape
+        image_rows, image_cols = depth_img.shape
         pixLandmarks=self.getPixelLandmarks(landmarks,depth_img)
 
         DepthConfidence=0
@@ -78,9 +78,9 @@ class DepthDetector():
         for i in range(0,10):
             if (not landmarks[i][2]):
                 faceDetected=False
-        if(faceDetected):
-            if(self.faceDepth(pixLandmarks,depth_img)):
-                DepthConfidence=DepthConfidence+1
+        #if(faceDetected):
+         #   if(self.faceDepth(pixLandmarks,depth_img)):
+          #      DepthConfidence=DepthConfidence+1
         print(DepthConfidence)
         for landmark in pixLandmarks:
             cv2.circle(depth_img, (landmark[0],landmark[1]), 5, 250, 2)
