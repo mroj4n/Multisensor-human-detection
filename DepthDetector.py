@@ -40,6 +40,11 @@ class DepthDetector():
         depthsInChestList=[]
         for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
             for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
+                if(cv2.pointPolygonTest(depth_img, (i,j), False) != 1.0):
+                    return False
+
+        for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
+            for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
                 if (int(depth_img[i][j])!=0):
                     depthsInChestList.append(depth_img[i][j].astype(float)*self.depth_scale*1000)#distance in cm
         depthsInChest=np.array(depthsInChestList)
@@ -54,6 +59,11 @@ class DepthDetector():
         depthsF=[]
         for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
             for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
+                if (cv2.pointPolygonTest(depth_img, (i,j), False) != 1.0):
+                    return False
+
+        for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
+            for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
                 if (int(depth_img[i][j])!=0):
                     depthsF.append(depth_img[i][j].astype(float)*self.depth_scale*1000)#distance in cm
         depths=np.array(depthsF)
@@ -63,8 +73,6 @@ class DepthDetector():
         ## print("FACE")
         ## print (flat_factor)
         return flat_factor > 1e-2
-
-
 
 
     def detect(self,landmarks,depth_img):

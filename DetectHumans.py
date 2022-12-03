@@ -43,7 +43,9 @@ while True:
     distanceCM=depth_map[205,305].astype(float)*depth_scale*100
     cv2.circle(color_image,(305,205),4,(0,0,0))
     cv2.putText(color_image,"{}cm".format(distanceCM),(305,195),cv2.FONT_HERSHEY_PLAIN,1,(0,0,0),2)
-    
+    for g in ge.GetGridValue(ImageMode=False):
+        print(g)
+    print("##########################")
     cv2.imshow("Color RealSense image", color_image)
     
     

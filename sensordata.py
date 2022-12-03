@@ -208,8 +208,8 @@ class GridEye():
         grideye_resized_img=cv2.rotate(grideye_resized_img,cv2.ROTATE_90_COUNTERCLOCKWISE)
         if(ImageMode):
             return grideye_resized_img
-        grideye_temps,minv,maxv = self.get_sensor_data("TEMP")
-        return [grideye_temps,minv,maxv]
+        grideye_temps,_,_ = self.get_sensor_data("TEMP")
+        return grideye_temps
 
 
 def int2twoscomplement(value, bits=12):
