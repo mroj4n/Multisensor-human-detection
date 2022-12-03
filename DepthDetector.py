@@ -80,8 +80,13 @@ class DepthDetector():
         TempOfStomach=0
         iters=0
         thermalconfidence=0
-        for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
-            for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
+        image_rows, image_cols = depth_img.shape
+        for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
+            for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
+                if (i>image_rows-1 or i <0 or j>image_cols-1 or j<0 ):
+                    return 0
+        for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
+            for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
                 if (int(depth_img[i][j])!=0):
                     TempOfStomach=TempOfStomach+thermalVals[int(i/80)][int(j/60)]
                     iters=iters+1
