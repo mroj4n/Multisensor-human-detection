@@ -45,7 +45,7 @@ for i in range(0, 144):
     
     #cv2.imshow("Depth RealSense image", detectPoseDepth)
     #cv2.imshow("Dete RealSense image", detectPoseRGB)
-    k = cv2.waitKey(0)
+    k = cv2.waitKey(2)
     if k == 27:
         cv2.destroyAllWindows()
         break

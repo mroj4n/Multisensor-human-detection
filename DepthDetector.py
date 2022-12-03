@@ -3,8 +3,8 @@ import cv2
 import math
 from typing import Tuple, Union
 class DepthDetector():
-    def __init__(self):
-        pass
+    def __init__(self,depth_scale):
+        self.depth_scale=depth_scale
     
     def _normalized_to_pixel_coordinates(
         self,normalized_x: float, normalized_y: float, image_width: int,
@@ -37,14 +37,15 @@ class DepthDetector():
         return pixLandmarks
    
     def doesChestHaveDepth(self,pixLandmarks,depth_img):
-        #use ransac to approximate a plane
-        depthsInChest=[]
+        depthsInChestList=[]
         for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
             for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
-                depthsInChest.append(int(depth_img[i][j][0])+int(depth_img[i][j][1])+int(depth_img[i][j][2]))
-        if (np.std(depthsInChest)<10):
-            return False
-        return True
+                if (int(depth_img[i][j])!=0):
+                    depthsInChestList.append(depth_img[i][j].astype(float)*self.depth_scale*1000)#distance in cm
+        depthsInChest=np.array(depthsInChestList)
+        avg= np.mean(depthsInChest)
+        flat_factor = abs(np.sum((depthsInChest-avg)*abs(depthsInChest-avg))/len(depthsInChest))
+        return flat_factor > 1e-5
     
     def faceDepth(self,landmarks,depth_img):
         depths=[]

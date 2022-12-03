@@ -28,7 +28,7 @@ color_image, depth_map = reals.getImage()
 depth_scale=reals.getDepthScale()
 
 detector = ptm.poseDetector()
-depthDetector=DepthDetector()
+depthDetector=DepthDetector(depth_scale=depth_scale)
 # yolo= YOLOdetector()
 while True:
     color_image, depth_map = reals.getImage()
