@@ -55,22 +55,22 @@ os.mkdir(Color_filename)
 os.mkdir(Depth_filename)
 os.mkdir(Depthnp_filename)
 np.save(main_folder_name+"depth_scale.npy",depth_scale)
-while True:
-    grideye_image = ge.GetGridValue()
-    color_image, depth_map = reals.getImage()
-    grideye_values,minTemp,maxTemp=ge.GetGridValue(ImageMode=False)
-    
-    np.save(Spark_numpys+str(counter)+".npy",grideye_values)
-    np.save(Spark_mins+str(counter)+".npy",minTemp)
-    np.save(Spark_maxs+str(counter)+".npy",maxTemp)
+try:
+    while True:
+        grideye_image = ge.GetGridValue()
+        color_image, depth_map = reals.getImage()
+        grideye_values,minTemp,maxTemp=ge.GetGridValue(ImageMode=False)
 
-    cv2.imwrite(Spark_filename+str(counter)+file_ext, grideye_image)
-    cv2.imwrite(Color_filename+str(counter)+file_ext, color_image)
-    cv2.imwrite(Depth_filename+str(counter)+file_ext, depth_map)
-    np.save(Depthnp_filename+str(counter)+".npy",depth_map)
-    cv2.imshow("RealSense image", depth_map)
-    counter=counter+1
-    k = cv2.waitKey(1)
-    if k == 27:
-        cv2.destroyAllWindows()
-        break
+        np.save(Spark_numpys+str(counter)+".npy",grideye_values)
+        np.save(Spark_mins+str(counter)+".npy",minTemp)
+        np.save(Spark_maxs+str(counter)+".npy",maxTemp)
+
+        cv2.imwrite(Spark_filename+str(counter)+file_ext, grideye_image)
+        cv2.imwrite(Color_filename+str(counter)+file_ext, color_image)
+        cv2.imwrite(Depth_filename+str(counter)+file_ext, depth_map)
+        np.save(Depthnp_filename+str(counter)+".npy",depth_map)
+        counter=counter+1
+        k = cv2.waitKey(1)
+except KeyboardInterrupt:
+    pass
+
