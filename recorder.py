@@ -16,7 +16,6 @@ import os
 
 from sensordata import GridEye
 from realsense_data import RealSense
-import keyboard
 
 
 
@@ -70,7 +69,8 @@ while True:
     np.save(Depthnp_filename+str(counter)+".npy",depth_map)
     counter=counter+1
     k = cv2.waitKey(1)
-    if keyboard.is_pressed("q"):
+    if counter==150:
+        print("Recordings saved in",main_folder_name)
         # Key was pressed
         break
 
