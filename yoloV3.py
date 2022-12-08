@@ -29,7 +29,7 @@ class YOLOdetector():
         return output_layers
 
     def draw_prediction(self, img, class_id, confidence, x, y, x_plus_w, y_plus_h):
-
+    
         label = str(self.classes[class_id])
 
         color = self.COLORS[class_id]
@@ -72,7 +72,7 @@ class YOLOdetector():
 
         self.indices = cv2.dnn.NMSBoxes(
             boxes, confidences, conf_threshold, nms_threshold)
-
+        predicted_locs=[]
         for i in self.indices:
             try:
                 box = boxes[i]
@@ -84,9 +84,20 @@ class YOLOdetector():
             y = box[1]
             w = box[2]
             h = box[3]
-            self.draw_prediction(self.image, class_ids[i], confidences[i], round(
-                x), round(y), round(x+w), round(y+h))
-        return self.image
+
+            if round(x)<0:
+                x=0
+            if round(y)<0:
+                y=0
+            if round(w)<0:
+                w=0
+            if round(h)<0:
+                h=0
+            if class_ids[i]==0:
+                predicted_locs.append([round(x),round(y),round(x+w),round(y+h)])
+            # self.draw_prediction(self.image, class_ids[i], confidences[i], round(
+            #     x), round(y), round(x+w), round(y+h))
+        return predicted_locs
 
 
 if __name__ == '__main__':
