@@ -1,20 +1,18 @@
 import numpy as np
 import cv2
-from time import sleep
-from pprint import pprint
 
 
 import mediapipe as mp
 
 import PoseTrackingModule as ptm
-import glob
 import os
 
 from yoloV3 import YOLOdetector
 
 from DepthDetector import DepthDetector
 
-main_folder_name="Recordings/recordings0/"
+
+main_folder_name="Recordings/mixes_copy/"
 
 Spark_filename= main_folder_name+"Spark_image/"
 Spark_numpys=main_folder_name+"Spark_npys/"
@@ -26,6 +24,7 @@ Depth_filename= main_folder_name+"Depth_RealSense/"
 Depthnp_filename = main_folder_name+"Depthnp_RealSense/"
 
 file_ext = ".jpg"
+
 
 Color_RealSense= []
 Depth_RealSense= []
@@ -60,12 +59,13 @@ for file in os.listdir(Spark_numpys):
 
 depth_scale=np.load(main_folder_name+'depth_scale.npy')
 
-
-
-
 detector = ptm.poseDetector()
 depthDetector=DepthDetector(depth_scale=depth_scale)
 yolo= YOLOdetector()
+
+
+
+##mediapipe only
 for i in range(len(Color_RealSense)):
     grideye_image = Spark_image[i]
     color_image  = Color_RealSense[i]
@@ -74,19 +74,27 @@ for i in range(len(Color_RealSense)):
     minTemp=Spark_minS[i]
     maxTemp=Spark_maxS[i]
     depth_map=Depthnp_RealSense[i]
-    # yoloDetect = yolo.predict(color_image)
+
+
+
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
-         color_image, depth_colormap)
+    color_image, depth_map)
+
     
     if(landmarks):
         depth_map=depthDetector.detect(landmarks,depth_map,grideye_values,minTemp,maxTemp)
-    cv2.imshow("Spark image", grideye_image)
     
-    cv2.imshow("Color RealSense image", color_image)
     
+    # cv2.imshow("Color RealSense image", color_image)
+    print()
+    print()
+    print()
+    print()
     #cv2.imshow("Depth RealSense image", detectPoseDepth)
     #cv2.imshow("Dete RealSense image", detectPoseRGB)
-    k = cv2.waitKey(3)
+    k = 0#cv2.waitKey(0)
     if k == 27:
         cv2.destroyAllWindows()
         break
+
+
