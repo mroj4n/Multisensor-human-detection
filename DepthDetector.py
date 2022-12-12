@@ -38,14 +38,19 @@ class DepthDetector():
         return pixLandmarks
     
     
-    def is_flat(self,landmarks, depth_map, threshold=0.9):
+    def is_flat(self,landmarks, depth_map, threshold=35000):
         points=[]
         depths=[]
+        image_rows, image_cols = depth_map.shape
+        print(depth_map.shape)
+        # for i in range(landmarks[24][0],landmarks[23][0]):
+        #     for j in range (landmarks[12][1],landmarks[24][1]):
+        #         if (i>image_rows-1 or i <0 or j>image_cols-1 or j<0 ):
+        #             return False
         for i in range(int(landmarks[24][0]),int(landmarks[23][0])):
             for j in range (int(landmarks[12][1]),int(landmarks[24][1])):
-                if (int(depth_map[i][j])!=0 and int(depth_map[i][j])>300):
                     points.append([i,j])
-                    depths.append([float(depth_map[i][j].astype(float)*self.depth_scale*1000)])#distance in cm
+                    depths.append([float(depth_map[j][i].astype(float)*self.depth_scale*1000)])#distance in cm
         depths = np.array(depths)
         points = np.array(points)
         # Fit a plane to the points using the RANSAC algorithm
@@ -55,8 +60,8 @@ class DepthDetector():
         predicted_depths = model.predict(points)
         # Evaluate the quality of the fit by calculating the sum of squared residuals
         residuals = depths - predicted_depths
-        ssr = np.sum(residuals**2)
-        ssr=int(ssr)
+        ssr = np.sum(residuals)
+        ssr=abs(int(ssr))
         print(ssr)
         return ssr < threshold
 

@@ -85,14 +85,14 @@ for i in range(len(Color_RealSense)):
         depth_map=depthDetector.detect(landmarks,depth_map,grideye_values,minTemp,maxTemp)
     
     
-    # cv2.imshow("Color RealSense image", color_image)
-    print()
+    cv2.imshow("Color RealSense image", color_image)
+    print(i)
     print()
     print()
     print()
     #cv2.imshow("Depth RealSense image", detectPoseDepth)
     #cv2.imshow("Dete RealSense image", detectPoseRGB)
-    k = 0#cv2.waitKey(0)
+    k =cv2.waitKey(0)
     if k == 27:
         cv2.destroyAllWindows()
         break
