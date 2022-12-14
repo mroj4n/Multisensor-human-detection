@@ -3,6 +3,8 @@ import cv2
 import math
 from typing import Tuple, Union
 from sklearn.linear_model import RANSACRegressor
+from sklearn.linear_model import LinearRegression
+from scipy.ndimage.filters import median_filter
 class DepthDetector():
     def __init__(self,depth_scale):
         self.depth_scale=depth_scale
@@ -37,108 +39,48 @@ class DepthDetector():
                 pixLandmarks.append([x_px,y_px,isLandmarkVisible])
         return pixLandmarks
     
-    
-    def is_flat(self,landmarks, depth_map, threshold=35000):
+
+    def is_flat(self,x1,x2,y1,y2, depth_map, threshold=60000):
+
+        filtered_depth_map = median_filter(depth_map, size=3)
         points=[]
         depths=[]
-        image_rows, image_cols = depth_map.shape
-        print(depth_map.shape)
-        # for i in range(landmarks[24][0],landmarks[23][0]):
-        #     for j in range (landmarks[12][1],landmarks[24][1]):
-        #         if (i>image_rows-1 or i <0 or j>image_cols-1 or j<0 ):
-        #             return False
-        for i in range(int(landmarks[24][0]),int(landmarks[23][0])):
-            for j in range (int(landmarks[12][1]),int(landmarks[24][1])):
-                    points.append([i,j])
-                    depths.append([float(depth_map[j][i].astype(float)*self.depth_scale*1000)])#distance in cm
+        for i in range(x1,x2):
+            for j in range (y1,y2):    
+                points.append([float(filtered_depth_map[j][i].astype(float)*self.depth_scale*1000)])#distance in cm
+            depths.append(points)
+            points=[]
         depths = np.array(depths)
-        points = np.array(points)
-        # Fit a plane to the points using the RANSAC algorithm
-        ransac = RANSACRegressor(min_samples=3)
-        model = ransac.fit(points, depths)
-
-        predicted_depths = model.predict(points)
-        # Evaluate the quality of the fit by calculating the sum of squared residuals
-        residuals = depths - predicted_depths
-        ssr = np.sum(residuals)
-        ssr=abs(int(ssr))
-        print(ssr)
-        return ssr < threshold
-
-    
-    def get_notso_stddev(self,arr):
-        # Calculate the mean of the array
-        mean = np.mean(arr)
-
-        # Calculate the sum of the squared differences from the mean
-        sum_sq_diff = np.sum((abs(arr - mean))*(arr - mean))
-        #sum_sq_diff = Σ((arr_i - mean)^2)
-        # Calculate the standard deviation
-        stddev = abs(sum_sq_diff / (len(arr) - 1))
-
-        return stddev
-    
-    def doesChestHaveDepth(self,pixLandmarks,depth_img):
-        x1, y1, *_ = pixLandmarks[24]
-        x2, y2, *_ = pixLandmarks[23]
-        x3, y3, *_ = pixLandmarks[12]
-        x4, y4, *_ = pixLandmarks[24]
-        depthsInChestList=[]
-        image_rows, image_cols = depth_img.shape
-        for i in range(x1, x2):
-            for j in range(y3, y4):
-                if (i>image_rows-1 or i <0 or j>image_cols-1 or j<0 ):
-                    return False
-    
-        for i in range(x1, x2):
-            for j in range(y3, y4):
-                depthsInChestList.append([float(depth_img[i][j].astype(float)*self.depth_scale*1000)])#distance in cm
+        # Compute the centroid of the points
+        centroid = np.mean(depths, axis=0)
         
-        if self.is_flat(depthsInChestList):
-            print('The object is flat')
-        else:
-            print('The object is not flat')
-        return 0
+        # Subtract the centroid from the points to center them at the origin
+        centered_points = depths - centroid
+        
+        # Use singular value decomposition to fit a plane to the centered points
+        U, S, V = np.linalg.svd(centered_points)
+        
+        # The normal vector of the fitted plane is the last column of V
+        normal = V[-1, :]
 
+        # Compute the sum of squared residuals
+        residuals = np.sum((centered_points @ normal)**2)
 
-    # def doesChestHaveDepth(self,pixLandmarks,depth_img):
-    #     depthsInChestList=[]
-    #     image_rows, image_cols = depth_img.shape
-    #     for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
-    #         for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
-    #             if (i>image_rows-1 or i <0 or j>image_cols-1 or j<0 ):
-    #                 return False
+        print(residuals)
+        return residuals<threshold
+
     
-    #     for i in range(pixLandmarks[24][0],pixLandmarks[23][0]):
-    #         for j in range (pixLandmarks[12][1],pixLandmarks[24][1]):
-    #             if (int(depth_img[i][j])!=0):
-    #                 depthsInChestList.append(depth_img[i][j].astype(float)*self.depth_scale*1000)#distance in cm
-    #     depthsInChest=np.array(depthsInChestList)
-    #     print(np.std(depthsInChest))
-    #     avg= np.mean(depthsInChest)
-    #     flat_factor = abs(np.sum((depthsInChest-avg)*abs(depthsInChest-avg))/len(depthsInChest))
-    #     ##Should be tested with a flaat
-    #     print("chest flat_factor",flat_factor)
-    #     return flat_factor > 1e-4
-    
-    def faceDepth(self,pixLandmarks,depth_img):
-        depthsF=[]
-        image_rows, image_cols = depth_img.shape
-        for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
-            for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
-                if (i>image_rows-1 or i <0 or j>image_cols-1 or j<0 ):
-                    return False
+    # def get_notso_stddev(self,arr):
+    #     # Calculate the mean of the array
+    #     mean = np.mean(arr)
 
-        for i in range(pixLandmarks[6][0],pixLandmarks[3][0]):
-            for j in range (pixLandmarks[6][1],pixLandmarks[10][1]):
-                if (int(depth_img[i][j])!=0):
-                    depthsF.append(depth_img[i][j].astype(float)*self.depth_scale*1000)#distance in cm
-        depths=np.array(depthsF)
-        avg= np.mean(depths)
-        flat_factor = abs(np.sum((depths-avg)*abs(depths-avg))/len(depths))
-        ##Should be tested with a flaat
-        print("FACE flat_factor",flat_factor)
-        return flat_factor > 1e-2
+    #     # Calculate the sum of the squared differences from the mean
+    #     sum_sq_diff = np.sum((abs(arr - mean))*(arr - mean))
+    #     #sum_sq_diff = Σ((arr_i - mean)^2)
+    #     # Calculate the standard deviation
+    #     stddev = abs(sum_sq_diff / (len(arr) - 1))
+
+    #     return stddev
 
     def ThermalDetection(self,pixLandmarks,depth_img,thermalVals,minTemp,maxTemp):
         TempOfStomach=0
@@ -158,7 +100,7 @@ class DepthDetector():
             TempOfStomach=TempOfStomach/iters
             if (TempOfStomach>29 and TempOfStomach < 38):
                 thermalconfidence=thermalconfidence+5
-            if ((((TempOfStomach/maxTemp[0])*100) >10) or (((TempOfStomach/minTemp[0])*100)>110) ):
+            if ((((TempOfStomach/maxTemp[0])*100) >30) or (((TempOfStomach/minTemp[0])*100)>130) ):
                 thermalconfidence=thermalconfidence+1
         return thermalconfidence
 
@@ -171,12 +113,10 @@ class DepthDetector():
     
         if (pixLandmarks[24][2] and pixLandmarks[23][2] and pixLandmarks[12][2] and pixLandmarks[11][2]):
             #checks if all 4 points for chest is existing
-            if self.is_flat(pixLandmarks,depth_img):
-                print('The object is flat')
-            else:
-                print('The object is not flat')
-        #if(faceDetected):
-            if(self.faceDepth(pixLandmarks,depth_img)):
+            if not (self.is_flat(pixLandmarks[24][0],pixLandmarks[23][0],pixLandmarks[12][1],pixLandmarks[24][1], depth_img, threshold=10000000)):
+                DepthConfidence=DepthConfidence+10
+            #faceDetected
+            if not (self.is_flat(pixLandmarks[6][0],pixLandmarks[3][0],pixLandmarks[6][1],pixLandmarks[10][1], depth_img, threshold=100000)):
                 DepthConfidence=DepthConfidence+3
 
             print("ThermalConfidence",  self.ThermalDetection(pixLandmarks,depth_img,thermalVals,minTemp,maxTemp))

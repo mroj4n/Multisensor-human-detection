@@ -12,7 +12,7 @@ from yoloV3 import YOLOdetector
 from DepthDetector import DepthDetector
 
 
-main_folder_name="Recordings/mixes_copy/"
+main_folder_name="Recordings/cutout_only/"
 
 Spark_filename= main_folder_name+"Spark_image/"
 Spark_numpys=main_folder_name+"Spark_npys/"
