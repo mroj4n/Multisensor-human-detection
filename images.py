@@ -12,7 +12,7 @@ from yoloV3 import YOLOdetector
 from DepthDetector import DepthDetector
 
 
-main_folder_name="Recordings/cutout_only/"
+main_folder_name="Recordings/mixes_copy/"
 
 Spark_filename= main_folder_name+"Spark_image/"
 Spark_numpys=main_folder_name+"Spark_npys/"
@@ -77,20 +77,26 @@ for i in range(len(Color_RealSense)):
 
 
 
-    detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
-    color_image, depth_map)
+    yoloDetects = yolo.predict(color_image)
+    landmarks=[]
+    for yoloDetect in yoloDetects:
+        detectPoseRGB, detectPoseDepth, landmark = detector.findPoseAndDrawLandmarksWithYolo(
+        color_image, depth_map,yoloDetect[0],yoloDetect[1],yoloDetect[2],yoloDetect[3] )
+        # cv2.imshow("Color RealSense image", color_image[yoloDetect[1]:yoloDetect[3],yoloDetect[0]:yoloDetect[2]])
+        # k =cv2.waitKey(0)
+        landmarks.append(landmark)
 
-    
-    if(landmarks):
-        depth_map=depthDetector.detect(landmarks,depth_map,grideye_values,minTemp,maxTemp)
+    for l in landmarks:
+        if(l):
+            depth_map=depthDetector.detect(l,depth_map,grideye_values,minTemp,maxTemp)
+
     
     
     cv2.imshow("Color RealSense image", color_image)
-    print(i)
     print()
     print()
     print()
-    #cv2.imshow("Depth RealSense image", detectPoseDepth)
+    cv2.imshow("Depth RealSense image", depth_map)
     #cv2.imshow("Dete RealSense image", detectPoseRGB)
     k =cv2.waitKey(0)
     if k == 27:
