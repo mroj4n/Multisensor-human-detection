@@ -40,7 +40,7 @@ class poseDetector():
         return lmList
 
     def findPoseColorAndDepth(self, color_img, depth_img, draw=False):
-        color_img = self.findpose(color_img, True)
+        color_img = self.findpose(color_img, draw)
         depth_img.flags.writeable = True
         if self.results.pose_landmarks:
             if draw:
@@ -96,7 +96,8 @@ class poseDetector():
         if self.results.pose_landmarks:
             for data_point in self.results.pose_landmarks.landmark:
                 landmarks.append([data_point.x,data_point.y,data_point.visibility])
-        return color_img, depth_img, landmarks
+        pixLandmarks=self.getPixelLandmarks(landmarks,color_img)
+        return color_img, depth_img, pixLandmarks
 
 
 def main():

@@ -79,24 +79,24 @@ for i in range(len(Color_RealSense)):
 
     yoloDetects = yolo.predict(color_image)
     landmarks=[]
+    yoloCoods=[]
     for yoloDetect in yoloDetects:
         detectPoseRGB, detectPoseDepth, landmark = detector.findPoseAndDrawLandmarksWithYolo(
         color_image, depth_map,yoloDetect[0],yoloDetect[1],yoloDetect[2],yoloDetect[3] )
         # cv2.imshow("Color RealSense image", color_image[yoloDetect[1]:yoloDetect[3],yoloDetect[0]:yoloDetect[2]])
         # k =cv2.waitKey(0)
         landmarks.append(landmark)
-
-    for l in landmarks:
-        if(l):
-            depth_map=depthDetector.detect(l,depth_map,grideye_values,minTemp,maxTemp)
+        if(landmark):
+            depth_map,color_image,_,_=depthDetector.detectWithYOLO(landmark,depth_map,color_image,grideye_values,minTemp,maxTemp,yoloDetect[0],yoloDetect[1],yoloDetect[2],yoloDetect[3])
+        
 
     
     
     cv2.imshow("Color RealSense image", color_image)
-    print()
-    print()
-    print()
-    cv2.imshow("Depth RealSense image", depth_map)
+    # depth_map = cv2.applyColorMap(
+    # cv2.convertScaleAbs(depth_map, alpha=0.03), cv2.COLORMAP_JET)
+
+    # cv2.imshow("Depth RealSense image", depth_map)
     #cv2.imshow("Dete RealSense image", detectPoseRGB)
     k =cv2.waitKey(0)
     if k == 27:

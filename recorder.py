@@ -28,10 +28,10 @@ depth_scale=reals.getDepthScale()
 
 main_folder_name="recordings"
 i=0
-main_folder_name=main_folder_name+str(i)
+main_folder_name=main_folder_name+str(i).zfill(3)
 while os.path.exists(main_folder_name+"/"):
     i=i+1
-    main_folder_name=main_folder_name[:-1]+str(i)
+    main_folder_name=main_folder_name[:-1]+str(i).zfill(3)
 main_folder_name=main_folder_name+"/"
 Spark_filename= main_folder_name+"Spark_image/"
 Spark_numpys=main_folder_name+"Spark_npys/"

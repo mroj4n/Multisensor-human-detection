@@ -36,7 +36,7 @@ while True:
     detectPoseRGB, detectPoseDepth, landmarks = detector.findPoseAndDrawLandmarks(
         color_image, depth_map)
     if(landmarks):
-        depth_map=depthDetector.detect(landmarks,depth_map,grideye_values,minTemp,maxTemp)
+        depth_map=depthDetector.detect(landmarks,depth_map,color_image,grideye_values,minTemp,maxTemp)
     # yoloDetect = yolo.predict(color_image)
     #cv2.imshow("Spark image", grideye_image)
 
