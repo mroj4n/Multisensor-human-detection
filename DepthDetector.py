@@ -96,9 +96,9 @@ class DepthDetector():
         thickness=1
         font_size=0.4
         color=(255,0,255)
-        cv2.putText(img, "depthConfidence:"+str(depthConfidence)+"%", (x-10, y-10),
+        cv2.putText(img, "depthConfidence:"+str(depthConfidence)+"%", (x-10, y+10),
                     cv2.FONT_HERSHEY_SIMPLEX, font_size, color, thickness)
-        cv2.putText(img, "thermalconfidence:"+str(thermalconfidence)+"%", (x-25, y-25),
+        cv2.putText(img, "thermalconfidence:"+str(thermalconfidence)+"%", (x-25, y+25),
                     cv2.FONT_HERSHEY_SIMPLEX, font_size, color, thickness)
         
     def depthDetection(self,pixLandmarks,depth_img):
@@ -126,11 +126,12 @@ class DepthDetector():
         #     cv2.circle(depth_img, (landmark[0],landmark[1]), 5, 250, 2)
         return depth_img,depthConfidence,thermalconfidence
     
-    def detectWithYOLO(self,pixLandmarks,depth_img,color_image,thermalVals,minTemp,maxTemp,x, y, x_plus_w, y_plus_h):
+    def detectWithYOLO(self,pixLandmarks,depth_img,color_image,thermalVals,minTemp,maxTemp,x, y, x_plus_w, y_plus_h,draw=True):
         depthConfidence=self.depthDetection(pixLandmarks,depth_img)
         thermalconfidence=self.ThermalDetection(pixLandmarks,depth_img,thermalVals,minTemp,maxTemp)
-
-        self.draw_prediction(color_image, x, y, x_plus_w, y_plus_h,depthConfidence,thermalconfidence)
-
+        if(draw):
+            self.draw_prediction(color_image, x, y, x_plus_w, y_plus_h,depthConfidence,thermalconfidence)
+            # for landmark in pixLandmarks:
+            #  cv2.circle(color_image, (landmark[0],landmark[1]), 5, 250, 2)
         return depth_img,color_image,depthConfidence,thermalconfidence
     

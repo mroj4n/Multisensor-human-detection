@@ -92,10 +92,12 @@ for i in range(len(Color_RealSense)):
 
     
     
-    cv2.imshow("Color RealSense image", color_image)
-    # depth_map = cv2.applyColorMap(
-    # cv2.convertScaleAbs(depth_map, alpha=0.03), cv2.COLORMAP_JET)
+    depth_map = cv2.applyColorMap(
+    cv2.convertScaleAbs(depth_map, alpha=0.03), cv2.COLORMAP_JET)
 
+    cv2.imshow("Color RealSense image", color_image)
+    cv2.imshow("depth_map image", depth_map)
+    cv2.imshow("grideye_image image", grideye_image)
     # cv2.imshow("Depth RealSense image", depth_map)
     #cv2.imshow("Dete RealSense image", detectPoseRGB)
     k =cv2.waitKey(0)
