@@ -9,10 +9,10 @@ import os
 
 from yoloV3 import YOLOdetector
 
-from DepthDetector import DepthDetector
+from DepthAndThermalDetector import DepthAndThermalDetector
 
 
-main_folder_name="Recordings/mixes_copy/"
+main_folder_name="images/"
 
 Spark_filename= main_folder_name+"Spark_image/"
 Spark_numpys=main_folder_name+"Spark_npys/"
@@ -60,12 +60,9 @@ for file in os.listdir(Spark_numpys):
 depth_scale=np.load(main_folder_name+'depth_scale.npy')
 
 detector = ptm.poseDetector()
-depthDetector=DepthDetector(depth_scale=depth_scale)
+depthAndThermalDetector=DepthAndThermalDetector(depth_scale=depth_scale)
 yolo= YOLOdetector()
 
-
-
-##mediapipe only
 for i in range(len(Color_RealSense)):
     grideye_image = Spark_image[i]
     color_image  = Color_RealSense[i]
@@ -76,18 +73,15 @@ for i in range(len(Color_RealSense)):
     depth_map=Depthnp_RealSense[i]
 
 
-
     yoloDetects = yolo.predict(color_image)
     landmarks=[]
     yoloCoods=[]
     for yoloDetect in yoloDetects:
         detectPoseRGB, detectPoseDepth, landmark = detector.findPoseAndDrawLandmarksWithYolo(
         color_image, depth_map,yoloDetect[0],yoloDetect[1],yoloDetect[2],yoloDetect[3] )
-        # cv2.imshow("Color RealSense image", color_image[yoloDetect[1]:yoloDetect[3],yoloDetect[0]:yoloDetect[2]])
-        # k =cv2.waitKey(0)
         landmarks.append(landmark)
         if(landmark):
-            depth_map,color_image,_,_=depthDetector.detectWithYOLO(landmark,depth_map,color_image,grideye_values,minTemp,maxTemp,yoloDetect[0],yoloDetect[1],yoloDetect[2],yoloDetect[3])
+            depth_map,color_image,_,_=depthAndThermalDetector.detectWithYOLO(landmark,depth_map,color_image,grideye_values,minTemp,maxTemp,yoloDetect[0],yoloDetect[1],yoloDetect[2],yoloDetect[3])
         
 
     
