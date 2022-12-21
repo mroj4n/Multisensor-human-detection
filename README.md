@@ -3,6 +3,10 @@ A detector that detects a human and then checks if the detected object's depth a
 
 # Try it out
 Some sample data is provided in `images/`, it can be tested by running `images.py`
+
+###Setup 
+#### Download weights in `yoloV3/`  `wget https://pjreddie.com/media/files/yolov3.weights`
+
 #  Retrieving Data
 The code for retrieving data was written in Python. Multiple libraries were used to
 retrieve the data and change the data type to fit the project. The data was collected and
@@ -39,9 +43,7 @@ YOLO returns the area where the human is detected, then all the region where hum
 Then mediapipe gives back all the points of the human for each region. Thus, in the end, the points for all humans are fetched. 
 
 see `yoloV3.py` and `PoseTrackingModule.py`
-### yolo setup 
-#### Download weights in yoloV3/
-#### `wget https://pjreddie.com/media/files/yolov3.weights`
+
 
 
 
