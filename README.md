@@ -4,7 +4,7 @@ A detector that detects a human and then checks if the detected object's depth a
 # Try it out
 Some sample data is provided in `images/`, it can be tested by running `images.py`
 
-###Setup 
+### Setup 
 #### Download weights in `yoloV3/`  `wget https://pjreddie.com/media/files/yolov3.weights`
 
 #  Retrieving Data
